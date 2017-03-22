@@ -1,0 +1,91 @@
+<div class="container">
+  <p class="pull-right"><a href="/users/<%= @user.id %>/edit">Edit My Profile</a> | <a href="/sessions" data-method="delete">Logout</a>
+  <h3>Welcome, <%= @user.first_name %></h3>
+
+  <h4>Here are some of the events at your state: </h4>
+  <table class="table table-striped">
+    <thead>
+      <th>Name</th>
+      <th>Date</th>
+      <th>Location</th>
+      <th>Host</th>
+      <th>Action/Status</th>
+    </thead>
+    <tbody>
+      <% @local_events.each do |event| %>
+        <tr>
+          <td><a href="/events/<%= event.id %>"><%= event.name %></a></td>
+          <td><%= event.date.strftime("%B %d %Y") %></td>
+          <td><%= event.city %></td>
+          <td><%= event.host.first_name %></td>
+          <td>
+            <% if event.host.id == session[:user_id] %>
+              <a href="/events/<%= event.id %>/edit">Edit</a> | <a href="/events/<%= event.id %>" data-method="delete">Delete</a>
+            <% elsif @attending.include?(event)%>
+              <span>Joining</span> | <a href="/events/<%= event.id %>/unjoin" data-method='delete'>Cancel</a>
+            <% else %>
+              <a href="/events/<%= event.id %>/join" data-method='post'>Join</a>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <h4>Here are some of the events at other states:</h4>
+  <table class="table table-striped">
+    <thead>
+      <th>Name</th>
+      <th>Date</th>
+      <th>Location</th>
+      <th>State</th>
+      <th>Host</th>
+      <th>Action</th>
+    </thead>
+    <tbody>
+      <% @other_events.each do |event| %>
+        <tr>
+          <td><a href="/events/<%= event.id %>"><%= event.name %></a></td>
+          <td><%= event.date.strftime("%B %d %Y") %></td>
+          <td><%= event.city %></td>
+          <td><%= event.state %></td>
+          <td><%= event.host.first_name %></td>
+          <td>
+            <% if event.host.id == session[:user_id] %>
+              <a href="/events/<%= event.id %>/edit">Edit</a> | <a href="/events/<%= event.id %>" data-method="delete">Delete</a>
+            <% elsif @attending.include?(event)%>
+              <span>Joining</span> | <a href="/events/<%= event.id %>/unjoin" data-method="delete">Cancel</a>
+            <% else %>
+              <a href="/events/<%= event.id %>/join" data-method='post'>Join</a>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div class="col-md-4">
+    <% if flash[:notice] %>
+      <% flash[:notice].each do |n| %>
+        <p class="text-danger"><%= n %></p>
+      <% end %>
+    <% end %>
+    <h4>Add Event</h4>
+    <%= form_for @event do |f| %>
+      <div class="form-group">
+        <%= f.label "Name:" %>
+        <%= f.text_field :name %>
+      </div>
+      <div class="form-group">
+        <%= f.label "Date:" %>
+        <%= f.date_field :date %>
+      </div>
+      <div class="form-group">
+        <%= f.label "Location:" %>
+        <%= f.text_field :city %>
+        <%= f.select :state, options_for_select(us_states) %>
+      </div>
+      <%= f.submit 'Add Event' %>
+    <% end %>
+  </div>
+</div>

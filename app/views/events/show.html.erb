@@ -1,0 +1,64 @@
+<div class="container">
+  <p class="pull-right"><a href="/events">Events Dashboard</a> | <a href="/sessions" data-method="delete">Logout</a>
+
+  <div class="col-md-6">
+    <h3><%= @event.name %></h3>
+    <h5>Host: <%= "#{@event.host.first_name} #{@event.host.last_name}" %></h5>
+    <h5>Date: <%= @event.date.strftime("%B %d %Y") %></h5>
+    <h5>Location: <%= "#{@event.city}, #{@event.state}" %></h5>
+    <h5>People who are joining this event: <%= @attendees.count %></h5>
+
+    <table class="table table-striped">
+      <thead>
+        <th>Name</th>
+        <th>Location</th>
+        <th>State</th>
+      </thead>
+      <tbody>
+        <% @attendees.each do |attendee| %>
+          <tr>
+            <td><%= attendee.user.first_name %></td>
+            <td><%= attendee.user.city %></td>
+            <td><%= attendee.user.state %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-md-4">
+    <h4>Discussion about this event:</h4>
+    <div class="comments">
+      <% @comments.each do |comment| %>
+        <p><%= comment.user.first_name %> says: <%= comment.content %></p>
+        <p>*******************************</p>
+      <% end %>
+
+    </div>
+
+    <%= form_for @comment do |f| %>
+      <div class="form-group">
+        <%= f.label "Add Comment:" %><br>
+        <%= f.text_area :content %>
+        <%= f.hidden_field(:event_id, :value => @event.id) %>
+      </div>
+      <%= f.submit "Submit Comments" %>
+    <% end %>
+
+    <% if flash[:notice] %>
+        <% flash[:notice].each do |notice| %>
+          <p class="text-danger"><%= notice %></p>
+        <% end %>
+      <% end %>
+  </div>
+
+</div>
+
+<style media="screen">
+  #comments {
+    border: 1px solid black;
+    height: 400px;
+    overflow: scroll;
+    margin-bottom: 15px;
+  }
+</style>

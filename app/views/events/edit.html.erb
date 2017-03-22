@@ -1,0 +1,28 @@
+<div class="container">
+  <p class="pull-right"><a href="/events">Events Dashboard</a> | <a href="/sessions" data-method="delete">Logout</a>
+  <h3>Edit Your Event</h3>
+  <% if flash[:notice] %>
+    <% flash[:notice].each do |n| %>
+      <p class="text-danger"><%= n %></p>
+    <% end %>
+  <% end %>
+  <div id="editevent" class="col-md-6">
+    <%= form_tag("/events/#{@event.id}", method: "patch") do %>
+      <div class="form-group">
+        <%= label_tag(:name, "Name:") %>
+        <%= text_field_tag(:name, "#{@event.name}") %>
+      </div>
+      <div class="form-group">
+        <%= label_tag(:date, "date:") %>
+        <%= date_field_tag(:date, "#{@event.date}") %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "Location:" %>
+        <%= text_field_tag(:city, "#{@event.city}") %>
+        <%= select_tag(:state, options_for_select(us_states, @event.state)) %>
+      </div>
+      <%= submit_tag("Update Event") %>
+    <% end %>
+  </div>
+
+</div>

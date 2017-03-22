@@ -1,0 +1,55 @@
+<div class="container">
+  <h3>Welcome!</h3>
+  <% if flash[:notice] %>
+    <% flash[:notice].each do |n| %>
+      <p class="text-danger"><%= n %></p>
+    <% end %>
+  <% end %>
+
+  <div id="register" class="col-md-6">
+    <h3>Register</h3>
+    <%= form_for @user do |f| %>
+      <div class="form-group">
+        <%= f.label "First Name:" %>
+        <%= f.text_field :first_name, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label "Last Name:" %>
+        <%= f.text_field :last_name, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label "Email:" %>
+        <%= f.text_field :email, class: "form-control" %>
+      </div>
+      <div class="form-group">
+          <%= f.label "Location:" %>
+          <%= f.text_field :city, class: "form-control" %>
+          <%= f.select :state, options_for_select(us_states) %>
+        </div>
+      <div class="form-group">
+        <%= f.label "Password:" %>
+        <%= f.password_field :password, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label "Confirm Password:" %>
+        <%= f.password_field :confirm_pw, class: "form-control" %>
+      </div>
+      <%= f.submit "Register" %>
+    <% end %>
+  </div>
+
+  <div id="login" class="col-md-6">
+    <h3>Log In</h3>
+    <%= form_tag("/sessions", method: "post") do %>
+      <div class="form-group">
+        <%= label_tag(:email, "Email:") %>
+        <%= text_field_tag(:email) %>
+      </div>
+      <div class="form-group">
+        <%= label_tag(:password, "Password:") %>
+        <%= password_field_tag(:password) %>
+      </div>
+      <%= submit_tag("Log In") %>
+    <% end %>
+  </div>
+</div>
